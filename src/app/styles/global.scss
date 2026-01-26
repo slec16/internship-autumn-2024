@@ -1,0 +1,35 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color, #FFFFFF);
+    color: var(--text-color, #000000);
+}
+
+body.theme-light {
+    --bg-color: #F5F7FA;
+    --text-color: #070707;
+}
+
+body.theme-dark {
+    --bg-color: #1F1F1F;
+    --text-color: #F5F5F5;
+}
+
+.container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    @media (max-width: 768px) {
+        padding: 0 16px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 0 12px;
+    }
+}
