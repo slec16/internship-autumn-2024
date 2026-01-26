@@ -1,13 +1,21 @@
-import { Button } from "antd"
 import styles from "./App.module.scss"
-import { useTheme } from "@/shared/lib/theme" 
+import { Routes, Route, Navigate } from "react-router-dom"
+import Advertisement from "@/pages/advertisement"
+import Advertisements from "@/pages/advertisements"
+import Orders from "@/pages/orders"
+import Header from "@/widgets/header"
 
 const App = () => {
-    const { theme, toggleTheme } = useTheme()
+
     return(
         <div className="container">
-            <h1 className={styles.title}>Marketplace seller</h1>
-            <Button type="primary" onClick={toggleTheme}>{theme === "dark" ? "light theme" : "dark theme"}</Button>
+            <Header />
+            <Routes>
+                <Route path="/" element={ <Navigate to="/advertisements" replace /> } />
+                <Route path="/advertisements" element={ <Advertisements /> } />
+                <Route path="/advertisements/:id" element={ <Advertisement /> } />
+                <Route path="/orders" element={ <Orders /> } />
+            </Routes>
         </div>
     )
 }
