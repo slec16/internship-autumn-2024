@@ -1,6 +1,7 @@
 .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .title {
@@ -10,8 +11,15 @@
 }
 
 .name {
-    color: #2462be;
     font-weight: 900;
     font-size: 32px;
     margin-right: 5px;
+}
+
+:global(.theme-light) .name {
+    color: #1677ff;
+}
+
+:global(.theme-dark) .name {
+    color: #fa8c16;
 }
