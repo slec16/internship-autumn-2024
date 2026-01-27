@@ -3,7 +3,7 @@ import { advertisementApi } from "../api/advertisementApi"
 import type { Advertisement } from "./types"
 
 export const advertisementsKeys = {
-    all: [ 'advertisemenr' ] as const,
+    all: [ 'advertisement' ] as const,
     lists: () => [...advertisementsKeys.all, 'list'] as const,
     list: ( filters: string ) => [...advertisementsKeys.lists(), { filters }] as const,
     details: () => [...advertisementsKeys.all, 'detail'] as const,
