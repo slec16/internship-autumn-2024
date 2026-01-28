@@ -1,0 +1,32 @@
+// .container {
+//     width: 100%;
+// }
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 36px;
+    margin-top: 16px;
+    letter-spacing: 0.5px;
+    opacity: 0.85;
+}
+
+.filtersContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.search {
+    width: 33%;
+    margin-right: 10px;
+}
