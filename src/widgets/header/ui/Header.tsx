@@ -4,18 +4,12 @@ import { Button } from 'antd'
 import { SunOutlined, MoonOutlined } from '@ant-design/icons'
 import styles from "./Header.module.scss"
 import TabsRouter from "@/features/tabs-router"
-import { useEffect } from "react"
 
 const Header = () => {
 
     const { theme, toggleTheme } = useTheme()
-    const navigate = useNavigate()
     const match = useMatch('/advertisements/:id')
     const id = match?.params.id
-
-    useEffect(() => {
-        console.log(id)
-    }, [id])
 
     return (
         <div className={styles.headerContainer}>
