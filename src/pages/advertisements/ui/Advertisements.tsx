@@ -2,12 +2,24 @@ import { Button, Select } from 'antd'
 import styles from './Advertisements.module.scss'
 import Search from '@/features/advertisement-search'
 import { SortAscendingOutlined } from '@ant-design/icons'
+import { useAdvertisements } from '@/entities/advertisement'
+import List from '@/widgets/advertisements-list'
 
 const Advertisements = () => {
 
-    const handleChange = (value: string) => {
-        console.log(`selected ${value}`)
+    const { data: advertisements, isLoading, error } = useAdvertisements()    
+
+    const handleChange = (val: string) => {
+        console.log(val)
     }
+
+    if( isLoading ) return(
+        <div>Загрузка...</div>
+    )
+
+    if( error ) return(
+        <div>Возникла ошибка</div>
+    )
 
     return (
         <div >
@@ -47,6 +59,10 @@ const Advertisements = () => {
                     ]}
                 />
             </div>
+            { advertisements
+                ? <List items={advertisements}/>
+                : <p>Пока пусто</p>
+            }
         </div>
     )
 }

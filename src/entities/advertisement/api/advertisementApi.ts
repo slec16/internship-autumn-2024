@@ -3,7 +3,7 @@ import type { Advertisement } from "../model/types"
 const baseUrl = "http://localhost:3000"
 
 export const advertisementApi = {
-    getAdvertisements: async (): Promise<{ data: Advertisement[] }> => {
+    getAdvertisements: async (): Promise< Advertisement[] > => {
         const response = await fetch(`${baseUrl}/advertisements`)
         if (!response.ok) throw new Error('Failed to fetch advertisements')
         return response.json()
