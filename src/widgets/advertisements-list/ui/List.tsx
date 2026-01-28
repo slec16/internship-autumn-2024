@@ -8,7 +8,8 @@ const columns: ColumnsType<Advertisement> = [
         title: "Изображение",
         dataIndex: "imageUrl",
         key: "imageUrl",
-        width: 100,
+        width: 150,
+        align: "center",
         render: (imageUrl: string) => (
             <div style={{ display: "inline-block" }} onClick={(e) => e.stopPropagation()}>
                 {imageUrl
