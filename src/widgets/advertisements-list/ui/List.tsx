@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom"
 import type { ColumnsType } from "antd/es/table"
 import type { Advertisement } from "@/entities/advertisement"
 
+
 const columns: ColumnsType<Advertisement> = [
     {
-        title: "Изображение",
+        title: () => <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Изображение</span>,
         dataIndex: "imageUrl",
         key: "imageUrl",
         width: 150,
@@ -43,15 +44,16 @@ const columns: ColumnsType<Advertisement> = [
         ),
     },
     {
-        title: "Название",
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Название</span>,
         dataIndex: "name",
         key: "name",
         width: 300,
         align: "center",
-        ellipsis: true
+        ellipsis: true,
+        render: (name: string) => <span style={{ fontWeight: "bold" }}>{ name }</span>,
     },
     {
-        title: "Описание",
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Описание</span>,
         dataIndex: "description",
         key: "description",
         ellipsis: true,
@@ -59,36 +61,39 @@ const columns: ColumnsType<Advertisement> = [
         render: (description: string) => description || "-"
     },
     {
-        title: "Цена",
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Цена</span>,
         dataIndex: "price",
         key: "price",
         width: 120,
         align: "center",
+        sorter: (a, b) => a.price - b.price,
         render: (price: number) => `${price.toLocaleString("ru-RU")} ₽`
     },
     {
-        title: "Дата создания",
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Просмотры</span>,
+        dataIndex: "views",
+        key: "views",
+        width: 150,
+        align: "center",
+        sorter: (a, b) => a.views - b.views,
+        render: (views: number) => views.toLocaleString("ru-RU")
+    },
+    {
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Лайки</span>,
+        dataIndex: "likes",
+        key: "likes",
+        width: 120,
+        align: "center",
+        sorter: (a, b) => a.likes - b.likes,
+        render: (likes: number) => likes.toLocaleString("ru-RU")
+    },
+    {
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Дата создания</span>,
         dataIndex: "createdAt",
         key: "createdAt",
         width: 150,
         align: "center",
         render: (date: number) => new Date(date).toLocaleString("ru-RU")
-    },
-    {
-        title: "Просмотры",
-        dataIndex: "views",
-        key: "views",
-        width: 150,
-        align: "center",
-        render: (views: number) => views.toLocaleString("ru-RU")
-    },
-    {
-        title: "Лайки",
-        dataIndex: "likes",
-        key: "likes",
-        width: 120,
-        align: "center",
-        render: (likes: number) => likes.toLocaleString("ru-RU")
     }
 ]
 

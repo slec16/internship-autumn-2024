@@ -43,21 +43,6 @@ const Advertisements = () => {
                         { value: 'likes', label: 'Лайки' },
                     ]}
                 />
-                <Select
-                    size='large'
-                    placeholder="Сортировка"
-                    prefix={<SortAscendingOutlined />}
-                    style={{ width: 200 }}
-                    allowClear
-                    onChange={handleChange}
-                    options={[
-                        { value: 'name', label: 'Имя' },
-                        { value: 'price', label: 'Цена' },
-                        { value: 'createdAt', label: 'Дата создания' },
-                        { value: 'views', label: 'Просмотры' },
-                        { value: 'likes', label: 'Лайки' },
-                    ]}
-                />
             </div>
             { advertisements
                 ? <List items={advertisements}/>
