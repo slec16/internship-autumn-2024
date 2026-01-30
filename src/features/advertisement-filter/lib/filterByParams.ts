@@ -2,7 +2,7 @@ import type { Advertisement } from "@/entities/advertisement"
 
 export const filterByParams = ( items: Advertisement[], searchParams: URLSearchParams ): Advertisement[] => {
     if( !items.length ) return []
-    console.log(items)
+    
     // TODO: проверки
     const type = searchParams.get("filterType")
     const fromValue = searchParams.get("from")

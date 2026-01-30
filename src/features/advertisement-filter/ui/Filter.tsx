@@ -23,14 +23,15 @@ const Filter = () => {
         setSelectedFilter(value)
         setSearchParams((prev) => {
             const params = new URLSearchParams(prev)
-            // if (value == undefined) {
-            //     params.delete('filterType')
-            //     params.delete('to')
-            //     params.delete('from')
-            // } else {
-            //     params.set('filterType', value)
-            // }
-            value == undefined ? params.delete('filterType') : params.set('filterType',value)
+            // TODO: удалять из локального state
+            if (value == undefined) {
+                params.delete('filterType')
+                params.delete('to')
+                params.delete('from')
+            } else {
+                params.set('filterType', value)
+            }
+            // value == undefined ? params.delete('filterType') : params.set('filterType',value)
             return params
         })
     }

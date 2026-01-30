@@ -10,8 +10,8 @@ import {Filter, filterByParams} from '@/features/advertisement-filter'
 
 const Advertisements = () => {
     const { searchParams, setSearchParams } = useQueryParams()
-    const { data: advertisements, isLoading, error } = useAdvertisements()    
-    // console.log(advertisements)
+    const { data: advertisements, isLoading, error } = useAdvertisements()
+
     const filteredAdvertisements = useMemo(() => {
         if( !advertisements ) return []
 
@@ -20,9 +20,7 @@ const Advertisements = () => {
         return result
     }, [advertisements, searchParams])
 
-    // useEffect(() => {
-    //     console.log(filteredAdvertisements)
-    // }, [filteredAdvertisements])
+
 
     if( isLoading ) return(
         <div>Загрузка...</div>
