@@ -1,1 +1,2 @@
-export { default } from './ui/Search'
+export { default as Search } from './ui/Search'
+export { filterBySearch } from './lib/FilterBySearch'

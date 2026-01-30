@@ -1,7 +1,7 @@
 import { useMemo, useEffect } from 'react'
 import { Button, Select } from 'antd'
 import styles from './Advertisements.module.scss'
-import Search from '@/features/advertisement-search'
+import {Search, filterBySearch} from '@/features/advertisement-search'
 import { useQueryParams } from '@/shared/lib/useQueryParams'
 import { SortAscendingOutlined } from '@ant-design/icons'
 import { useAdvertisements } from '@/entities/advertisement'
@@ -16,6 +16,7 @@ const Advertisements = () => {
         if( !advertisements ) return []
 
         let result = filterByParams(advertisements, searchParams)
+        result = filterBySearch(result, searchParams)
         
         return result
     }, [advertisements, searchParams])
