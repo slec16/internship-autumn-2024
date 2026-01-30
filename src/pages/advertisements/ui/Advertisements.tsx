@@ -1,17 +1,28 @@
+import { useMemo, useEffect } from 'react'
 import { Button, Select } from 'antd'
 import styles from './Advertisements.module.scss'
 import Search from '@/features/advertisement-search'
+import { useQueryParams } from '@/shared/lib/useQueryParams'
 import { SortAscendingOutlined } from '@ant-design/icons'
 import { useAdvertisements } from '@/entities/advertisement'
 import List from '@/widgets/advertisements-list'
+import {Filter, filterByParams} from '@/features/advertisement-filter'
 
 const Advertisements = () => {
-
+    const { searchParams, setSearchParams } = useQueryParams()
     const { data: advertisements, isLoading, error } = useAdvertisements()    
+    // console.log(advertisements)
+    const filteredAdvertisements = useMemo(() => {
+        if( !advertisements ) return []
 
-    const handleChange = (val: string) => {
-        console.log(val)
-    }
+        let result = filterByParams(advertisements, searchParams)
+        
+        return result
+    }, [advertisements, searchParams])
+
+    // useEffect(() => {
+    //     console.log(filteredAdvertisements)
+    // }, [filteredAdvertisements])
 
     if( isLoading ) return(
         <div>Загрузка...</div>
@@ -24,28 +35,18 @@ const Advertisements = () => {
     return (
         <div >
             <div className={styles.header}>
-                <h2 className={styles.title}>Список товаров</h2>
+                {/* <h2 className={styles.title}>Список товаров</h2> */}
+                <h2 className={styles.title}>Список товаров {filteredAdvertisements.length}</h2>
                 <Button type='primary'>Добавить товар</Button>
             </div>
             <div className={styles.filtersContainer}>
                 <div className={styles.search}>
                     <Search />
                 </div>
-                <Select
-                    size='large'
-                    placeholder="Фильтры"
-                    style={{ width: 200, marginRight: 10 }}
-                    allowClear
-                    onChange={handleChange}
-                    options={[
-                        { value: 'price', label: 'Цена' },
-                        { value: 'views', label: 'Просмотры' },
-                        { value: 'likes', label: 'Лайки' },
-                    ]}
-                />
+                <Filter />
             </div>
-            { advertisements
-                ? <List items={advertisements}/>
+            { filteredAdvertisements
+                ? <List items={filteredAdvertisements}/>
                 : <p>Пока пусто</p>
             }
         </div>

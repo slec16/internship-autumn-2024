@@ -67,6 +67,7 @@ const columns: ColumnsType<Advertisement> = [
         width: 120,
         align: "center",
         sorter: (a, b) => a.price - b.price,
+        showSorterTooltip: false,
         render: (price: number) => `${price.toLocaleString("ru-RU")} ₽`
     },
     {
@@ -76,6 +77,7 @@ const columns: ColumnsType<Advertisement> = [
         width: 150,
         align: "center",
         sorter: (a, b) => a.views - b.views,
+        showSorterTooltip: false,
         render: (views: number) => views.toLocaleString("ru-RU")
     },
     {
@@ -85,6 +87,7 @@ const columns: ColumnsType<Advertisement> = [
         width: 120,
         align: "center",
         sorter: (a, b) => a.likes - b.likes,
+        showSorterTooltip: false,
         render: (likes: number) => likes.toLocaleString("ru-RU")
     },
     {
