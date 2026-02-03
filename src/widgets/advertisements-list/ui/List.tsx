@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react"
 import { Table, Image } from "antd"
 import { useNavigate } from "react-router-dom"
+import { useQueryParams } from "@/shared/lib/useQueryParams"
 import type { ColumnsType } from "antd/es/table"
 import type { Advertisement } from "@/entities/advertisement"
 
@@ -50,7 +52,7 @@ const columns: ColumnsType<Advertisement> = [
         width: 300,
         align: "center",
         ellipsis: true,
-        render: (name: string) => <span style={{ fontWeight: "bold" }}>{ name }</span>,
+        render: (name: string) => <span style={{ fontWeight: "bold" }}>{name}</span>,
     },
     {
         title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Описание</span>,
@@ -102,18 +104,67 @@ const columns: ColumnsType<Advertisement> = [
 
 const List = ({ items }: { items: Advertisement[] }) => {
     const navigate = useNavigate()
+    const { searchParams, setSearchParams } = useQueryParams()
+
+    const [page, setPage] = useState(Number(searchParams.get("page")) || 1)
+    const [pageSize, setPageSize] = useState(Number(searchParams.get("pageSize")) || 10)
+
+    useEffect(() => {
+        const currentPage = searchParams.get("page")
+        const currentPageSize = searchParams.get("pageSize")
+        
+        if (!currentPage || !currentPageSize) {
+            setSearchParams((prev) => {
+                const params = new URLSearchParams(prev)
+                
+                if (!currentPage) {
+                    params.set('page', String(page))
+                }
+                if (!currentPageSize) {
+                    params.set('pageSize', String(pageSize))
+                }
+                
+                return params
+            })
+        }
+    }, [])
+
+    const paginationHandler = ( page: number, pageSize: number ) => {
+        setPage(page)
+        setPageSize(pageSize)
+        setSearchParams((prev) => {
+            const params = new URLSearchParams(prev)
+
+            params.delete('page')
+            params.delete('pageSize')
+           
+
+            params.set('page', String(page))
+            params.set('pageSize', String(pageSize))
+            
+            
+            return params
+        })
+    }
 
     return (
         <Table
             columns={columns}
             dataSource={items}
             rowKey="id"
-            pagination={{ pageSize: 10, showSizeChanger: true, pageSizeOptions: ["5", "10", "20"] }}
+            pagination={{
+                align: "center",
+                current: page,
+                pageSize: pageSize,
+                showSizeChanger: true,
+                pageSizeOptions: ["5", "10", "20"],
+                onChange: paginationHandler
+            }}
             scroll={{ x: 900 }}
             onRow={(record) => ({
                 onClick: () => navigate(`/advertisements/${record.id}`),
                 style: { cursor: "pointer" }
-            })} 
+            })}
         />
     )
 }
