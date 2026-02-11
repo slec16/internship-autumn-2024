@@ -3,7 +3,7 @@ import { Table, Image } from "antd"
 import { useNavigate } from "react-router-dom"
 import { useQueryParams } from "@/shared/lib/useQueryParams"
 import type { ColumnsType } from "antd/es/table"
-import type { Advertisement } from "@/entities/advertisement"
+import type { Advertisement, IAdvertisementsParams } from "@/entities/advertisement"
 
 
 const columns: ColumnsType<Advertisement> = [
@@ -102,45 +102,24 @@ const columns: ColumnsType<Advertisement> = [
     }
 ]
 
-const List = ({ items }: { items: Advertisement[] }) => {
+const List = ({ items, params, total }: { items: Advertisement[], params: IAdvertisementsParams, total: number | undefined }) => {
     const navigate = useNavigate()
+
+    const { page, perPage } = params
     const { searchParams, setSearchParams } = useQueryParams()
 
-    const [page, setPage] = useState(Number(searchParams.get("page")) || 1)
-    const [pageSize, setPageSize] = useState(Number(searchParams.get("pageSize")) || 10)
-
-    useEffect(() => {
-        const currentPage = searchParams.get("page")
-        const currentPageSize = searchParams.get("pageSize")
-        
-        if (!currentPage || !currentPageSize) {
-            setSearchParams((prev) => {
-                const params = new URLSearchParams(prev)
-                
-                if (!currentPage) {
-                    params.set('page', String(page))
-                }
-                if (!currentPageSize) {
-                    params.set('pageSize', String(pageSize))
-                }
-                
-                return params
-            })
-        }
-    }, [])
+    
 
     const paginationHandler = ( page: number, pageSize: number ) => {
-        setPage(page)
-        setPageSize(pageSize)
         setSearchParams((prev) => {
             const params = new URLSearchParams(prev)
 
             params.delete('page')
-            params.delete('pageSize')
+            params.delete('perPage')
            
 
             params.set('page', String(page))
-            params.set('pageSize', String(pageSize))
+            params.set('perPage', String(pageSize))
             
             
             return params
@@ -155,9 +134,10 @@ const List = ({ items }: { items: Advertisement[] }) => {
             pagination={{
                 align: "center",
                 current: page,
-                pageSize: pageSize,
+                pageSize: perPage,
                 showSizeChanger: true,
                 pageSizeOptions: ["5", "10", "20"],
+                total: total,
                 onChange: paginationHandler
             }}
             scroll={{ x: 900 }}

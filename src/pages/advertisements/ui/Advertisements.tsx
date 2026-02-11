@@ -7,21 +7,36 @@ import { SortAscendingOutlined } from '@ant-design/icons'
 import { useAdvertisements } from '@/entities/advertisement'
 import List from '@/widgets/advertisements-list'
 import {Filter, filterByParams} from '@/features/advertisement-filter'
+import type { IAdvertisementsParams } from '@/entities/advertisement/model/types'
 
 const Advertisements = () => {
-    const { searchParams, setSearchParams } = useQueryParams()
-    const { data: advertisements, isLoading, error } = useAdvertisements()
+    const { getParam, searchParams, setSearchParams } = useQueryParams()
+
+    // TODO: проводить проверку
+    const page = Number(getParam("page")) || 1
+    const perPage = Number(getParam("perPage")) || 10
+    const sortField = getParam("sortField") || ""
+    const sortType = getParam("sortType") || ""
+    
+    const params: IAdvertisementsParams = {
+        page,
+        perPage,
+        sortField,
+        sortType,
+    }
+    
+    const { data: advertisements, isLoading, error } = useAdvertisements(params)
 
     const filteredAdvertisements = useMemo(() => {
         if( !advertisements ) return []
 
-        let result = filterByParams(advertisements, searchParams)
+        let result = filterByParams(advertisements.data, searchParams)
         result = filterBySearch(result, searchParams)
         
         return result
     }, [advertisements, searchParams])
 
-
+    console.log("adver res",advertisements)
 
     if( isLoading ) return(
         <div>Загрузка...</div>
@@ -45,7 +60,7 @@ const Advertisements = () => {
                 <Filter />
             </div>
             { filteredAdvertisements
-                ? <List items={filteredAdvertisements}/>
+                ? <List items={filteredAdvertisements} params={params} total={advertisements?.items}/>
                 : <p>Пока пусто</p>
             }
         </div>

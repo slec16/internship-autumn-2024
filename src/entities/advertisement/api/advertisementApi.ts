@@ -1,10 +1,10 @@
-import type { Advertisement } from "../model/types"
+import type { Advertisement, IAdvertisementsParams, IAdvertisementsResponse } from "../model/types"
 
 const baseUrl = "http://localhost:3000"
 
 export const advertisementApi = {
-    getAdvertisements: async (): Promise< Advertisement[] > => {
-        const response = await fetch(`${baseUrl}/advertisements`)
+    getAdvertisements: async ( params: IAdvertisementsParams ): Promise< IAdvertisementsResponse > => {
+        const response = await fetch(`${baseUrl}/advertisements?_page=${params.page}&_per_page=${params.perPage}`)
         if (!response.ok) throw new Error('Failed to fetch advertisements')
         return response.json()
     },

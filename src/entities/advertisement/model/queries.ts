@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { advertisementApi } from "../api/advertisementApi" 
-import type { Advertisement } from "./types"
+import type { Advertisement, IAdvertisementsParams } from "./types"
 
 export const advertisementsKeys = {
     all: [ 'advertisement' ] as const,
@@ -10,10 +10,10 @@ export const advertisementsKeys = {
     detail: ( id: string ) => [...advertisementsKeys.details(), id] as const
 }
 
-export const useAdvertisements = () => {
+export const useAdvertisements = (params: IAdvertisementsParams) => {
     return useQuery({
-        queryKey: advertisementsKeys.lists(),
-        queryFn: advertisementApi.getAdvertisements,
+        queryKey: [ ...advertisementsKeys.lists(), params, ],
+        queryFn: () => advertisementApi.getAdvertisements( params ),
         staleTime: 1 * 60 * 1000
     })
 }

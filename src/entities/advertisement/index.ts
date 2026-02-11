@@ -1,4 +1,4 @@
-export type { Advertisement } from './model/types'
+export type { Advertisement, IAdvertisementsParams, IAdvertisementsResponse  } from './model/types'
 export { 
     advertisementsKeys, 
     useAdvertisements,

@@ -16,3 +16,21 @@ export interface Advertisement {
     /* Ссылка на изображение. */
     imageUrl?: string;
 }
+
+export interface IAdvertisementsParams {
+    page: number,
+    perPage: number,
+    sortType: string,
+    sortField: string
+}
+
+export interface IAdvertisementsResponse {
+    data: Advertisement[],
+    first: number,
+    prev: null | number,
+    next: null | number,
+    last: number,
+    pages: number,
+    items: number,
+}
+
