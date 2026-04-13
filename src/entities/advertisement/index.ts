@@ -6,3 +6,4 @@ export {
     useUpdateAdvertisement,
     useDeleteAdvertisement,
 } from './model/queries'
+export { columns } from './ui/columns'

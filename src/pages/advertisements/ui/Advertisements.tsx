@@ -4,10 +4,12 @@ import styles from './Advertisements.module.scss'
 import {Search, filterBySearch} from '@/features/advertisement-search'
 import { useQueryParams } from '@/shared/lib/useQueryParams'
 import { SortAscendingOutlined } from '@ant-design/icons'
-import { useAdvertisements } from '@/entities/advertisement'
-import List from '@/widgets/advertisements-list'
+import List from '@/widgets/list'
 import {Filter, filterByParams} from '@/features/advertisement-filter'
-import type { IAdvertisementsParams } from '@/entities/advertisement/model/types'
+import { useAdvertisements } from '@/entities/advertisement'
+import type { IAdvertisementsParams } from '@/entities/advertisement'
+import { columns } from '@/entities/advertisement'
+
 
 const Advertisements = () => {
     const { getParam, searchParams, setSearchParams } = useQueryParams()
@@ -49,7 +51,6 @@ const Advertisements = () => {
     return (
         <div >
             <div className={styles.header}>
-                {/* <h2 className={styles.title}>Список товаров</h2> */}
                 <h2 className={styles.title}>Список товаров {filteredAdvertisements.length}</h2>
                 <Button type='primary'>Добавить товар</Button>
             </div>
@@ -60,7 +61,12 @@ const Advertisements = () => {
                 <Filter />
             </div>
             { filteredAdvertisements
-                ? <List items={filteredAdvertisements} params={params} total={advertisements?.items}/>
+                ? <List
+                    columns={columns}
+                    items={filteredAdvertisements}
+                    params={params}
+                    total={filteredAdvertisements.length}
+                />
                 : <p>Пока пусто</p>
             }
         </div>
