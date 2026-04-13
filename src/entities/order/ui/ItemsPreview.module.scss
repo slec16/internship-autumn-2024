@@ -1,0 +1,13 @@
+.counterBox {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #bfdbfe; // blue-200
+    border-radius: 8px; // rounded-lg
+    align-items: center;
+    justify-content: center;
+}
+
+.counterText {
+    color: #60a5fa; // blue-400
+}

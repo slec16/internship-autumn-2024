@@ -10,6 +10,7 @@ interface IParams {
     sortField: string
 }
 
+// TODO: onClick handler через пропс (navigate только для advert)
 const List = <T,> ({ columns, items, params, total }: { columns: ColumnsType<T>, items: any[], params: IParams, total: number | undefined }) => {
 
     const navigate = useNavigate()

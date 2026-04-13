@@ -10,6 +10,17 @@ const OrderStatus = {
     Refund: 6
 } as const;
 
+export const statusToText: Record<number, string> = {
+    0: 'Создан',
+    1: 'Оплачен',
+    2: 'Транспортировка',
+    3: 'Доставка до пункта выдачи',
+    4: 'Получено',
+    5: 'Архив',
+    6: 'Отказ'
+}
+                        
+
 export interface OrderItem extends Advertisement {
     count: number
 }

@@ -38,8 +38,6 @@ const Advertisements = () => {
         return result
     }, [advertisements, searchParams])
 
-    console.log("adver res",advertisements)
-
     if( isLoading ) return(
         <div>Загрузка...</div>
     )
@@ -49,7 +47,7 @@ const Advertisements = () => {
     )
 
     return (
-        <div >
+        <>
             <div className={styles.header}>
                 <h2 className={styles.title}>Список товаров {filteredAdvertisements.length}</h2>
                 <Button type='primary'>Добавить товар</Button>
@@ -69,7 +67,7 @@ const Advertisements = () => {
                 />
                 : <p>Пока пусто</p>
             }
-        </div>
+        </>
     )
 }
 

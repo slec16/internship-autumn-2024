@@ -4,7 +4,7 @@ import type { Advertisement, IAdvertisementsParams } from "@/entities/advertisem
 
 export const columns: ColumnsType<Advertisement> = [
     {
-        title: () => <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Изображение</span>,
+        title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Изображение</span>,
         dataIndex: "imageUrl",
         key: "imageUrl",
         width: 150,
