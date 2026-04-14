@@ -1,11 +1,9 @@
 import type { Advertisement } from "@/entities/advertisement"
 
-export const filterBySearch = (items: Advertisement[], searchParams: URLSearchParams): Advertisement[] => {
+export const filterBySearch = (items: Advertisement[], q: string): Advertisement[] => {
     if (!items.length) return []
 
-    const searchQuery = (searchParams.get("q") || "").trim().toLowerCase()
+    if (!q) return items
 
-    if (!searchQuery) return items
-
-    return items.filter((item) => item.name.toLowerCase().includes(searchQuery))
+    return items.filter((item) => item.name.toLowerCase().includes(q))
 }

@@ -1,13 +1,14 @@
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import styles from './Advertisements.module.scss'
-import { Search } from '@/features/advertisement-search'
+import { Search, filterBySearch } from '@/features/advertisement-search'
 import { useQueryParams } from '@/shared/lib/useQueryParams'
 import { useAdvertisements, advertisementColumns } from '@/entities/advertisement'
 import { List } from '@/widgets/list'
 import { Filter } from '@/features/advertisement-filter'
 import type { AdvertisementFilterField, IAdvertisementsParams } from '@/entities/advertisement/model/types'
 import type { Advertisement } from '@/entities/advertisement'
+import { useMemo } from 'react'
 
 const Advertisements = () => {
     const navigate = useNavigate()
@@ -29,7 +30,7 @@ const Advertisements = () => {
 
     const from = fromParam ? Number(fromParam) : undefined
     const to = toParam ? Number(toParam) : undefined
-    
+
     const params: IAdvertisementsParams = {
         page,
         perPage,
@@ -40,16 +41,16 @@ const Advertisements = () => {
         from: Number.isNaN(from) ? undefined : from,
         to: Number.isNaN(to) ? undefined : to,
     }
-    
+
     const { data: advertisements, isLoading, error } = useAdvertisements(params)
 
-    console.log(advertisements)
+    // не работает серверный поиск ?name_content=q
+    const searchedAdvertisements = useMemo(() => {
+        if (!advertisements) return []
+        return filterBySearch(advertisements.data, q)
+    }, [advertisements, q])
 
-    if( isLoading ) return(
-        <div>Загрузка...</div>
-    )
-
-    if( error ) return(
+    if (error) return (
         <div>Возникла ошибка</div>
     )
 
@@ -65,16 +66,18 @@ const Advertisements = () => {
                 </div>
                 <Filter />
             </div>
-            { advertisements
-                ? <List<Advertisement>
-                    columns={advertisementColumns}
-                    items={advertisements.data}
-                    params={params}
-                    total={advertisements?.items}
-                    rowKey="id"
-                    onRowClick={(record) => navigate(`/advertisements/${record.id}`)}
-                  />
-                : <p>Пока пусто</p>
+            {isLoading
+                ? <div>Загрузка...</div>
+                : searchedAdvertisements
+                    ? <List<Advertisement>
+                        columns={advertisementColumns}
+                        items={searchedAdvertisements}
+                        params={params}
+                        total={searchedAdvertisements.length}
+                        rowKey="id"
+                        onRowClick={(record) => navigate(`/advertisements/${record.id}`)}
+                    />
+                    : <p>Пока пусто</p>
             }
         </>
     )
