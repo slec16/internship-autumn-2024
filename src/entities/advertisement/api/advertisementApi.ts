@@ -4,7 +4,7 @@ const baseUrl = "http://localhost:3000"
 
 export const advertisementApi = {
     getAdvertisements: async ( params: IAdvertisementsParams ): Promise< IAdvertisementsResponse > => {
-        const response = await fetch(`${baseUrl}/advertisements?_page=${params.page}&_per_page=${params.perPage}`)
+        const response = await fetch(`${baseUrl}/advertisements?_page=${params.page}&_per_page=${params.perPage}${params.sortField ? `&_sort=${params.sortType === "desc" ? "-" : ""}${params.sortField}` : ""}`)
         if (!response.ok) throw new Error('Failed to fetch advertisements')
         return response.json()
     },

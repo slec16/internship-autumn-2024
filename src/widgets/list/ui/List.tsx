@@ -1,44 +1,82 @@
-import { Table, Image, ListProps } from "antd"
-import type { ColumnsType } from "antd/es/table"
-import { useNavigate } from "react-router-dom"
+import { useMemo } from "react"
+import { Table } from "antd"
 import { useQueryParams } from "@/shared/lib/useQueryParams"
+import type { ColumnsType } from "antd/es/table"
+import type { SorterResult } from "antd/es/table/interface"
 
-interface IParams {
-    page: number,
-    perPage: number,
-    sortType: string,
+export interface IListParams {
+    page: number
+    perPage: number
     sortField: string
+    sortType: string
 }
 
-// TODO: onClick handler через пропс (navigate только для advert)
-const List = <T,> ({ columns, items, params, total }: { columns: ColumnsType<T>, items: any[], params: IParams, total: number | undefined }) => {
+interface ListProps<T> {
+    columns: ColumnsType<T>
+    items: T[]
+    total?: number
+    params: IListParams
+    rowKey: string
+    onRowClick?: (record: T) => void
+}
 
-    const navigate = useNavigate()
+const getSortOrder = (field: string, sortField: string, sortType: string) => {
+    if (sortField !== field) return null
+    if (sortType === "asc") return "ascend" as const
+    if (sortType === "desc") return "descend" as const
+    return null
+}
 
-    const { page, perPage } = params
-    const { searchParams, setSearchParams } = useQueryParams()
+const List = <T extends object>({ columns, items, total, params, rowKey, onRowClick }: ListProps<T>) => {
+    const { page, perPage, sortField, sortType } = params
+    const { setSearchParams } = useQueryParams()
 
-    const paginationHandler = ( page: number, pageSize: number ) => {
+    const columnsWithSort: ColumnsType<T> = useMemo(() =>
+        columns.map((col) => ({
+            ...col,
+            ...(col.sorter
+                ? { sortOrder: getSortOrder(String("dataIndex" in col ? col.dataIndex : col.key), sortField, sortType) }
+                : {}
+            ),
+        })),
+        [columns, sortField, sortType]
+    )
+
+    const tableChangeHandler = (
+        pagination: { current?: number; pageSize?: number },
+        _filters: unknown,
+        sorter: SorterResult<T> | SorterResult<T>[]
+    ) => {
         setSearchParams((prev) => {
             const params = new URLSearchParams(prev)
 
-            params.delete('page')
-            params.delete('perPage')
-           
+            // пагинация
+            const newPage = pagination.current ?? page
+            const newPerPage = pagination.pageSize ?? perPage
 
-            params.set('page', String(page))
-            params.set('perPage', String(pageSize))
-            
-            
+            params.set("page", String(newPage))
+            params.set("perPage", String(newPerPage))
+
+            // сортировка
+            if (!Array.isArray(sorter)) {
+                params.delete("sortField")
+                params.delete("sortType")
+
+                if (sorter.order && sorter.field) {
+                    params.set("sortField", String(sorter.field))
+                    params.set("sortType", sorter.order === "ascend" ? "asc" : "desc")
+                }
+            }
+
             return params
         })
     }
 
-    return(
-        <Table
-            columns={columns}
+    return (
+        <Table<T>
+            columns={columnsWithSort}
             dataSource={items}
-            rowKey="id"
+            rowKey={rowKey}
             pagination={{
                 align: "center",
                 current: page,
@@ -46,13 +84,13 @@ const List = <T,> ({ columns, items, params, total }: { columns: ColumnsType<T>,
                 showSizeChanger: true,
                 pageSizeOptions: ["5", "10", "20"],
                 total: total,
-                onChange: paginationHandler
             }}
             scroll={{ x: 900 }}
-            onRow={(record) => ({
-                onClick: () => navigate(`/advertisements/${record.id}`),
-                style: { cursor: "pointer" }
-            })}
+            onChange={tableChangeHandler}
+            onRow={onRowClick ? (record) => ({
+                onClick: () => onRowClick(record),
+                style: { cursor: "pointer" },
+            }) : undefined}
         />
     )
 }

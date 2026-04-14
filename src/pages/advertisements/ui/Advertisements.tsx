@@ -1,18 +1,18 @@
-import { useMemo, useEffect } from 'react'
-import { Button, Select } from 'antd'
+import { useMemo } from 'react'
+import { Button } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import styles from './Advertisements.module.scss'
-import {Search, filterBySearch} from '@/features/advertisement-search'
+import { Search, filterBySearch } from '@/features/advertisement-search'
 import { useQueryParams } from '@/shared/lib/useQueryParams'
-import { SortAscendingOutlined } from '@ant-design/icons'
-import List from '@/widgets/list'
-import {Filter, filterByParams} from '@/features/advertisement-filter'
-import { useAdvertisements } from '@/entities/advertisement'
-import type { IAdvertisementsParams } from '@/entities/advertisement'
-import { columns } from '@/entities/advertisement'
-
+import { useAdvertisements, advertisementColumns } from '@/entities/advertisement'
+import { List } from '@/widgets/list'
+import { Filter, filterByParams } from '@/features/advertisement-filter'
+import type { IAdvertisementsParams } from '@/entities/advertisement/model/types'
+import type { Advertisement } from '@/entities/advertisement'
 
 const Advertisements = () => {
-    const { getParam, searchParams, setSearchParams } = useQueryParams()
+    const navigate = useNavigate()
+    const { getParam, searchParams } = useQueryParams()
 
     // TODO: проводить проверку
     const page = Number(getParam("page")) || 1
@@ -59,12 +59,14 @@ const Advertisements = () => {
                 <Filter />
             </div>
             { filteredAdvertisements
-                ? <List
-                    columns={columns}
+                ? <List<Advertisement>
+                    columns={advertisementColumns}
                     items={filteredAdvertisements}
                     params={params}
-                    total={filteredAdvertisements.length}
-                />
+                    total={advertisements?.items}
+                    rowKey="id"
+                    onRowClick={(record) => navigate(`/advertisements/${record.id}`)}
+                  />
                 : <p>Пока пусто</p>
             }
         </>

@@ -1,8 +1,8 @@
 import { Image } from "antd"
 import type { ColumnsType } from "antd/es/table"
-import type { Advertisement, IAdvertisementsParams } from "@/entities/advertisement"
+import type { Advertisement } from "../model/types"
 
-export const columns: ColumnsType<Advertisement> = [
+export const advertisementColumns: ColumnsType<Advertisement> = [
     {
         title: <span style={{ fontWeight: "lighter", fontSize: "16px" }}>Изображение</span>,
         dataIndex: "imageUrl",
@@ -64,7 +64,7 @@ export const columns: ColumnsType<Advertisement> = [
         key: "price",
         width: 120,
         align: "center",
-        sorter: (a, b) => a.price - b.price,
+        sorter: true,
         showSorterTooltip: false,
         render: (price: number) => `${price.toLocaleString("ru-RU")} ₽`
     },
@@ -74,7 +74,7 @@ export const columns: ColumnsType<Advertisement> = [
         key: "views",
         width: 150,
         align: "center",
-        sorter: (a, b) => a.views - b.views,
+        sorter: true,
         showSorterTooltip: false,
         render: (views: number) => views.toLocaleString("ru-RU")
     },
@@ -84,7 +84,7 @@ export const columns: ColumnsType<Advertisement> = [
         key: "likes",
         width: 120,
         align: "center",
-        sorter: (a, b) => a.likes - b.likes,
+        sorter: true,
         showSorterTooltip: false,
         render: (likes: number) => likes.toLocaleString("ru-RU")
     },
