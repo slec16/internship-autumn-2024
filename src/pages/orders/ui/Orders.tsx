@@ -1,9 +1,10 @@
 import { useMemo } from "react"
 import style from "./Orders.module.scss"
-import List from "@/widgets/list"
+import { List } from "@/widgets/list"
 import { useOrders, columns } from "@/entities/order"
 import { useQueryParams } from '@/shared/lib/useQueryParams'
 import { Select, InputNumber } from 'antd'
+import type { Order } from "@/entities/order"
 
 const Orders = () => {
     const { getParam, searchParams, setSearchParams } = useQueryParams()
@@ -54,11 +55,13 @@ const Orders = () => {
                 />
             </div>
             {orders
-                ? <List
+                ? <List<Order>
                     columns={columns}
                     items={orders}
                     params={params}
                     total={orders.length}
+                    rowKey="id"
+                    onRowClick={(record) => console.log(record)}
                 />
                 : <p>Пока пусто</p>
 
