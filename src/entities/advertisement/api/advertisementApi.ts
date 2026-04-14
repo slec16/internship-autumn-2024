@@ -1,10 +1,41 @@
-import type { Advertisement, IAdvertisementsParams, IAdvertisementsResponse } from "../model/types"
+import type {
+    Advertisement,
+    AdvertisementFilterField,
+    IAdvertisementsParams,
+    IAdvertisementsResponse,
+} from "../model/types"
 
+// TODO: add .env file
 const baseUrl = "http://localhost:3000"
+
+const filterFields: AdvertisementFilterField[] = ['price', 'views', 'likes']
 
 export const advertisementApi = {
     getAdvertisements: async ( params: IAdvertisementsParams ): Promise< IAdvertisementsResponse > => {
-        const response = await fetch(`${baseUrl}/advertisements?_page=${params.page}&_per_page=${params.perPage}${params.sortField ? `&_sort=${params.sortType === "desc" ? "-" : ""}${params.sortField}` : ""}`)
+        const searchParams = new URLSearchParams({
+            _page: String(params.page),
+            _per_page: String(params.perPage),
+        })
+
+        if (params.sortField) {
+            searchParams.set('_sort', `${params.sortType === 'desc' ? '-' : ''}${params.sortField}`)
+        }
+
+        // if (params.q) {
+        //     searchParams.set('name:startsWith', String(params.q))
+        // }
+
+        if (params.filterField && filterFields.includes(params.filterField)) {
+            if (params.from !== undefined) {
+                searchParams.set(`${params.filterField}_gt`, String(params.from))
+            }
+
+            if (params.to !== undefined) {
+                searchParams.set(`${params.filterField}_lt`, String(params.to))
+            }
+        }
+
+        const response = await fetch(`${baseUrl}/advertisements?${searchParams.toString()}`)
         if (!response.ok) throw new Error('Failed to fetch advertisements')
         return response.json()
     },

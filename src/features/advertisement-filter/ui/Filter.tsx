@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQueryParams } from '@/shared/lib/useQueryParams'
-import { Select, InputNumber } from 'antd'
+import { Select, InputNumber, Button } from 'antd'
 import styles from "./Filter.module.scss"
 
 //TODO: в query params хранить price=500000-614999 ?
@@ -19,36 +19,29 @@ const Filter = () => {
     const [fromValue, setFromValue] = useState<number | null>(Number(searchParams.get('from')) || null)
     const [toValue, setToValue] = useState<number | null>(Number(searchParams.get('to')) || null)
 
-    const handleChange = (value: string) => {
+    const changeFilterHandler = (value: string) => {
         setSelectedFilter(value)
+        setFromValue(null)
+        setToValue(null)
         setSearchParams((prev) => {
             const params = new URLSearchParams(prev)
-            setFromValue(null)
-            setToValue(null)
             params.delete('to')
             params.delete('from')
-            value == undefined ? params.delete('filterType') : params.set('filterType',value)
+            params.delete('filterType')
             return params
         })
     }
 
-    const fromValueHandler = (value: number | null) => {
-        setFromValue(value)
+    const applyFilterHandler = () => {
         setSearchParams((prev) => {
             const params = new URLSearchParams(prev)
-            value == null ? params.delete('from') : params.set('from', String(value))
+            selectedFilter == null ? params.delete('filterType') : params.set('filterType', selectedFilter)
+            fromValue != null ? params.set('from', String(fromValue)) : params.delete('from')
+            toValue != null ? params.set('to', String(toValue)) : params.delete('to')
             return params
         })
     }
 
-    const toValueHandler = (value: number | null) => {
-        setToValue(value)
-        setSearchParams((prev) => {
-            const params = new URLSearchParams(prev)
-            value == null ? params.delete('to') : params.set('to', String(value))
-            return params
-        })
-    }
 
     return (
         <div className={styles.container}>
@@ -58,7 +51,7 @@ const Filter = () => {
                 style={{ width: 200 }}
                 value={selectedFilter}
                 allowClear
-                onChange={handleChange}
+                onChange={changeFilterHandler}
                 options={[
                     { value: 'price', label: 'Цена' },
                     { value: 'views', label: 'Просмотры' },
@@ -73,7 +66,7 @@ const Filter = () => {
                         value={fromValue}
                         min={0}
                         max={toValue ? toValue - 1 : undefined}
-                        onChange={fromValueHandler}
+                        onChange={(value) => setFromValue(value)}
                     />
                     -
                     <InputNumber
@@ -81,8 +74,15 @@ const Filter = () => {
                         placeholder='До'
                         value={toValue}
                         min={fromValue ? fromValue + 1 : 0}
-                        onChange={toValueHandler}
+                        onChange={(value) => setToValue(value)}
                     />
+                    <Button
+                        type='primary'
+                        size='large'
+                        onClick={applyFilterHandler}
+                    >
+                        Применить
+                    </Button>
                 </>
             }
         </div>

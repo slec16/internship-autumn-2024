@@ -17,11 +17,17 @@ export interface Advertisement {
     imageUrl?: string;
 }
 
+export type AdvertisementFilterField = 'price' | 'views' | 'likes'
+
 export interface IAdvertisementsParams {
     page: number,
     perPage: number,
     sortType: string,
-    sortField: string
+    sortField: string,
+    q?: string,
+    filterField?: AdvertisementFilterField,
+    from?: number,
+    to?: number,
 }
 
 export interface IAdvertisementsResponse {

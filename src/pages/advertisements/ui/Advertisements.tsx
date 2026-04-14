@@ -1,42 +1,49 @@
-import { useMemo } from 'react'
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import styles from './Advertisements.module.scss'
-import { Search, filterBySearch } from '@/features/advertisement-search'
+import { Search } from '@/features/advertisement-search'
 import { useQueryParams } from '@/shared/lib/useQueryParams'
 import { useAdvertisements, advertisementColumns } from '@/entities/advertisement'
 import { List } from '@/widgets/list'
-import { Filter, filterByParams } from '@/features/advertisement-filter'
-import type { IAdvertisementsParams } from '@/entities/advertisement/model/types'
+import { Filter } from '@/features/advertisement-filter'
+import type { AdvertisementFilterField, IAdvertisementsParams } from '@/entities/advertisement/model/types'
 import type { Advertisement } from '@/entities/advertisement'
 
 const Advertisements = () => {
     const navigate = useNavigate()
-    const { getParam, searchParams } = useQueryParams()
+    const { getParam } = useQueryParams()
 
     // TODO: проводить проверку
     const page = Number(getParam("page")) || 1
     const perPage = Number(getParam("perPage")) || 10
     const sortField = getParam("sortField") || ""
     const sortType = getParam("sortType") || ""
+    const q = getParam("q").trim()
+    const filterType = getParam("filterType")
+    const fromParam = getParam("from")
+    const toParam = getParam("to")
+
+    const isValidFilterField = (value: string): value is AdvertisementFilterField => {
+        return value === 'price' || value === 'views' || value === 'likes'
+    }
+
+    const from = fromParam ? Number(fromParam) : undefined
+    const to = toParam ? Number(toParam) : undefined
     
     const params: IAdvertisementsParams = {
         page,
         perPage,
         sortField,
         sortType,
+        q: q || undefined,
+        filterField: isValidFilterField(filterType) ? filterType : undefined,
+        from: Number.isNaN(from) ? undefined : from,
+        to: Number.isNaN(to) ? undefined : to,
     }
     
     const { data: advertisements, isLoading, error } = useAdvertisements(params)
 
-    const filteredAdvertisements = useMemo(() => {
-        if( !advertisements ) return []
-
-        let result = filterByParams(advertisements.data, searchParams)
-        result = filterBySearch(result, searchParams)
-        
-        return result
-    }, [advertisements, searchParams])
+    console.log(advertisements)
 
     if( isLoading ) return(
         <div>Загрузка...</div>
@@ -49,7 +56,7 @@ const Advertisements = () => {
     return (
         <>
             <div className={styles.header}>
-                <h2 className={styles.title}>Список товаров {filteredAdvertisements.length}</h2>
+                <h2 className={styles.title}>Список товаров {advertisements?.items ?? 0}</h2>
                 <Button type='primary'>Добавить товар</Button>
             </div>
             <div className={styles.filtersContainer}>
@@ -58,10 +65,10 @@ const Advertisements = () => {
                 </div>
                 <Filter />
             </div>
-            { filteredAdvertisements
+            { advertisements
                 ? <List<Advertisement>
                     columns={advertisementColumns}
-                    items={filteredAdvertisements}
+                    items={advertisements.data}
                     params={params}
                     total={advertisements?.items}
                     rowKey="id"
