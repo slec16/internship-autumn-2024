@@ -41,3 +41,23 @@ export interface Order {
     /* Сумма заказа */
     total: number;
 }
+
+export interface IOrdersParams {
+    page: number,
+    perPage: number,
+    sortType: string,
+    sortField: string,
+    status?: number,
+    from?: number,
+    to?: number,
+}
+
+export interface IOrdersResponse {
+    data: Order[],
+    first: number,
+    prev: null | number,
+    next: null | number,
+    last: number,
+    pages: number,
+    items: number,
+}

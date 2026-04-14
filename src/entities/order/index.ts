@@ -1,4 +1,4 @@
-export type { Order } from "./model/types"
+export type { Order, IOrdersParams } from "./model/types"
 export { statusToText } from "./model/types"
 export {
     ordersKeys,
