@@ -50,6 +50,8 @@ const Advertisements = () => {
         return filterBySearch(advertisements.data, q)
     }, [advertisements, q])
 
+    console.log(advertisements)
+
     if (error) return (
         <div>Возникла ошибка</div>
     )
@@ -57,7 +59,7 @@ const Advertisements = () => {
     return (
         <>
             <div className={styles.header}>
-                <h2 className={styles.title}>Список товаров {advertisements?.items ?? 0}</h2>
+                <h2 className={styles.title}>Список товаров</h2>
                 <Button type='primary'>Добавить товар</Button>
             </div>
             <div className={styles.filtersContainer}>
@@ -73,7 +75,7 @@ const Advertisements = () => {
                         columns={advertisementColumns}
                         items={searchedAdvertisements}
                         params={params}
-                        total={searchedAdvertisements.length}
+                        total={q ? searchedAdvertisements.length :  advertisements?.items}
                         rowKey="id"
                         onRowClick={(record) => navigate(`/advertisements/${record.id}`)}
                     />

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { orderApi } from "../api/ordersApi"
-import type { Order, IOrdersParams } from "./types"
+import type { Order, IOrdersParams, IOrdersResponse } from "./types"
 
 export const ordersKeys = {
     all: ['orders'] as const,
@@ -11,7 +11,7 @@ export const ordersKeys = {
 }
 
 export const useOrders = (params: IOrdersParams) => {
-    return useQuery({
+    return useQuery<IOrdersResponse>({
         queryKey: [ ...ordersKeys.lists(), params, ],
         queryFn: () => orderApi.getOrders( params ),
         staleTime: 1 * 60 * 1000

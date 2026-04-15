@@ -87,10 +87,10 @@ const List = <T extends object>({ columns, items, total, params, rowKey, onRowCl
             }}
             scroll={{ x: 900 }}
             onChange={tableChangeHandler}
-            // onRow={onRowClick ? (record) => ({
-            //     onClick: () => onRowClick(record),
-            //     style: { cursor: "pointer" },
-            // }) : undefined}
+            onRow={onRowClick ? (record) => ({
+                onClick: () => onRowClick(record),
+                style: { cursor: "pointer" },
+            }) : undefined}
         />
     )
 }

@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react"
 import style from "./Orders.module.scss"
 import { List } from "@/widgets/list"
 import { useOrders, columns } from "@/entities/order"
@@ -59,12 +58,6 @@ const Orders = () => {
 
     const { data: orders, isLoading, error } = useOrders(params)
 
-    console.log(orders)
-
-    // if (isLoading) return (
-    //     <div>Загрузка...</div>
-    // )
-
     if (error) return (
         <div>Возникла ошибка</div>
     )
@@ -113,9 +106,9 @@ const Orders = () => {
                 : orders
                     ? <List<Order>
                         columns={columns}
-                        items={orders}
+                        items={orders.data}
                         params={params}
-                        total={orders.length}
+                        total={orders.items}
                         rowKey="id"
                         onRowClick={(record) => console.log(record)}
                     />

@@ -13,7 +13,7 @@ export const columns: ColumnsType<Order> = [
         width: 150,
         align: "center",
         render: (items: Advertisement[]) => (
-            <div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <ItemsPreview items={items} />
             </div>
         ),
