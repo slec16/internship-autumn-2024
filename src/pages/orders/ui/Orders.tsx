@@ -1,12 +1,17 @@
 import style from "./Orders.module.scss"
+import { useState } from "react"
 import { List } from "@/widgets/list"
 import { useOrders, columns } from "@/entities/order"
 import { useQueryParams } from '@/shared/lib/useQueryParams'
-import { Select, InputNumber } from 'antd'
+import { Select, InputNumber, Modal } from 'antd'
 import type { Order, IOrdersParams } from "@/entities/order"
+import { ModalOrder } from "@/entities/order"
 
 const Orders = () => {
     const { getParam, searchParams, setSearchParams } = useQueryParams()
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [currentOrder, setCurrentOrder] = useState<Order | null>(null)
 
     const page = Number(getParam("page")) || 1
     const perPage = Number(getParam("perPage")) || 10
@@ -46,7 +51,16 @@ const Orders = () => {
         })
     }
 
-    const params: IOrdersParams  = {
+    const openOrderModal = (record: Order) => {
+        setIsModalOpen(true)
+        setCurrentOrder(record)
+    }
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const params: IOrdersParams = {
         page,
         perPage,
         sortField,
@@ -85,7 +99,7 @@ const Orders = () => {
                 <InputNumber
                     size='large'
                     placeholder='Минимальная сумма'
-                    style={{width: 200}}
+                    style={{ width: 200 }}
                     value={from}
                     min={0}
                     max={to ? to - 1 : undefined}
@@ -95,13 +109,13 @@ const Orders = () => {
                 <InputNumber
                     size='large'
                     placeholder='Максимальная сумма'
-                    style={{width: 200}}
+                    style={{ width: 200 }}
                     value={to}
                     min={from ? from + 1 : 0}
                     onChange={(value) => toValueHandler(value)}
                 />
             </div>
-            { isLoading
+            {isLoading
                 ? <div>Загрузка...</div>
                 : orders
                     ? <List<Order>
@@ -110,11 +124,21 @@ const Orders = () => {
                         params={params}
                         total={orders.items}
                         rowKey="id"
-                        onRowClick={(record) => console.log(record)}
+                        onRowClick={(record) => openOrderModal(record)}
                     />
                     : <p>Пока пусто</p>
 
             }
+            <Modal
+                title={`Заказ № ${currentOrder?.id}`}
+                closable={{ 'aria-label': 'Custom Close Button' }}
+                open={isModalOpen}
+                onCancel={handleCancel}
+            >
+                <ModalOrder
+                    order={currentOrder}
+                />
+            </Modal>
         </>
     )
 }

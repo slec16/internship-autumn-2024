@@ -6,3 +6,4 @@ export {
     useOrder
 } from "./model/queries"
 export { columns } from "./ui/columns"
+export {default as ModalOrder} from "./ui/ModalOrder"
